@@ -1,6 +1,6 @@
-import {Octokit} from "@octokit/rest";
+import { Octokit } from "@octokit/rest";
 import GithubWatchAllRepos from "./base";
-import * as chalk from "chalk";
+import chalk = require("chalk");
 import capitalize = require("lodash.capitalize");
 
 /**
@@ -20,8 +20,8 @@ export interface RepoClientConstructorOptions {
   closed: boolean;
   author?: string;
   label?: string;
-  perRepoLimit?: number
-  totalLimit?: number
+  perRepoLimit?: number;
+  totalLimit?: number;
 }
 
 /**
@@ -37,11 +37,11 @@ export interface RepoData {
  * An interface for expected return data from Octokit pull request listing methods.
  */
 export interface PRData {
-  user: { name?: string | null } | null
-  labels: { name?: string }[]
-  state: string
-  number: number
-  title: string
+  user: { name?: string | null } | null;
+  labels: { name?: string }[];
+  state: string;
+  number: number;
+  title: string;
 }
 
 /**
@@ -58,8 +58,8 @@ export class RepoClient {
   closed: boolean;
   author?: string;
   label?: string;
-  perRepoLimit?: number
-  totalLimit?: number
+  perRepoLimit?: number;
+  totalLimit?: number;
 
   constructor(params: RepoClientConstructorOptions) {
     this.username = params.username;
@@ -105,13 +105,16 @@ export class RepoClient {
   private getState(): "all" | "open" | "closed" {
     if (this.open && this.closed) {
       return "all";
-    } else if (this.open) {
+    }
+
+ if (this.open) {
       return "open";
     }
+
     return "closed";
   }
 
-  async getPRs(repo: RepoData): Promise<any> {
+  async getPRs(repo: RepoData): Promise<PRData[]> {
     let prs: PRData[] = await this.octokit.paginate(this.octokit.pulls.list, {
       owner: repo.owner.login,
       repo: repo.name,
@@ -122,7 +125,7 @@ export class RepoClient {
     });
 
     if (this.author) {
-      prs = prs.filter((pr) => pr.user && (pr.user.name === this.author));
+      prs = prs.filter((pr) => pr.user && pr.user.name === this.author);
     }
 
     if (this.label) {
@@ -135,37 +138,39 @@ export class RepoClient {
   }
 
   /**
-   * PRint the heading for a new repository.
+   * Print the heading for a new repository.
    * @param repo The repository to print the heading for.
    * @param prs The list of PRs for the repository.
    * @param totalPRsDisplayed The number of PRs shown already for other repositories. This is useful due to {@link RepoClient.totalLimit}.
+   * @return No return value.
    */
-  public printRepoHeading(repo: RepoData, prs: PRData[], totalPRsDisplayed: number): void {
+  public printRepoHeading(
+    repo: RepoData,
+    prs: PRData[],
+    totalPRsDisplayed: number
+  ): void {
     let heading = chalk.bold(`${repo.owner.login}/${repo.name}`);
     let displayablePRs = prs.length;
-    if (this.perRepoLimit) {
-      if (displayablePRs > this.perRepoLimit) {
+    if (this.perRepoLimit && displayablePRs > this.perRepoLimit) {
         displayablePRs = this.perRepoLimit;
       }
-    }
-    if (this.totalLimit) {
-      if (totalPRsDisplayed + displayablePRs > this.totalLimit) {
+    if (this.totalLimit && totalPRsDisplayed + displayablePRs > this.totalLimit) {
         displayablePRs = this.totalLimit - totalPRsDisplayed;
       }
-    }
-    if (displayablePRs !== prs.length) {
-      heading += ` (${displayablePRs}/${prs.length})`
-    } else {
-      heading += ` (${prs.length})`
-    }
+    heading += displayablePRs !== prs.length ? ` (${displayablePRs}/${prs.length})` : ` (${prs.length})`;
     console.log(chalk.underline(heading));
   }
 
   public printPR(repo: RepoData, pr: PRData): void {
     const consoleWidth: number = process.stdout.columns || 80;
-    let outputString = `[${capitalize(pr.state)}] https://github.com/${repo.owner.login}/${repo.name}/pull/${pr.number}: `;
+    let outputString = `[${capitalize(pr.state)}] https://github.com/${
+      repo.owner.login
+    }/${repo.name}/pull/${pr.number}: `;
     const remainingLength = consoleWidth - outputString.length;
-    const titleToShow = pr.title.length > remainingLength ? `${pr.title.substring(0, remainingLength - 3)}...` : pr.title;
+    const titleToShow =
+      pr.title.length > remainingLength
+        ? `${pr.title.slice(0, Math.max(0, remainingLength - 3))}...`
+        : pr.title;
     outputString += titleToShow;
     return console.log(outputString);
   }
@@ -173,18 +178,18 @@ export class RepoClient {
   async main(): Promise<void> {
     let repos: RepoData[];
     repos = await this.getRepos();
-
     if (!this.privateRepos) {
       repos = repos.filter((repo) => !repo.private);
     }
-
     console.log(
       `Listing PRs from ${repos.length} repositories. This may take a while.`
     );
+    const allPRs = await Promise.all(repos.map((repo) => this.getPRs(repo)))
     let globalCount = 0;
-    for (const repo of repos) {
+    for (let i: number = 0; i < repos.length; i++) {
       let perRepoCount = 0;
-      const prs: PRData[] = await this.getPRs(repo);
+      const repo: RepoData = repos[i];
+      const prs: PRData[] = allPRs[i];
       if (prs.length === 0) {
         continue;
       }
@@ -196,6 +201,7 @@ export class RepoClient {
         if (this.totalLimit && globalCount >= this.totalLimit) {
           return;
         }
+
         if (this.perRepoLimit && perRepoCount >= this.perRepoLimit) {
           return;
         }

@@ -4,27 +4,44 @@ describe("github-list-all-prs user", () => {
   test.command(["user"]).exit(2).it("runs user command without args");
   test
     .stdout()
-    .command(["user", "octokat"])
-    .it("runs user command with octokat user", (ctx) =>
-      expect(ctx.stdout).to.contain("Watching 8 repositories")
+    .command(["user", "PythonCoderAS"])
+    .it("runs user command with PythonCoderAS user", (ctx) =>
+      expect(ctx.stdout).to.contain(
+        "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1: Github API PR Test 1"
+      )
     );
   test
     .stdout()
-    .command(["user", "--watch", "octokat"])
-    .it("runs user command with octokat user and explicit watch mode", (ctx) =>
-      expect(ctx.stdout).to.contain("Watching 8 repositories")
-    );
-  test
-    .stdout()
-    .command(["user", "--ignore", "octokat"])
-    .it("runs user command with octokat user and ignore mode", (ctx) =>
-      expect(ctx.stdout).to.contain("Ignoring 8 repositories")
-    );
-  test
-    .stdout()
-    .command(["user", "--unwatch", "octokat"])
+    .command(["user", "--open", "PythonCoderAS"])
     .it(
-      "runs user command with octokat user and explicit unwatch mode",
-      (ctx) => expect(ctx.stdout).to.contain("Unwatching 8 repositories")
+      "runs user command with PythonCoderAS user and explicit open mode",
+      (ctx) =>
+        expect(ctx.stdout).to.contain(
+          "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1: Github API PR Test 1"
+        )
+    );
+  test
+    .stdout()
+    .command(["user", "--closed", "PythonCoderAS"])
+    .it(
+      "runs user command with PythonCoderAS user and explicit closed mode",
+      (ctx) =>
+        expect(ctx.stdout).to.contain(
+          "[Closed] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/2: Github API PR Test 2"
+        )
+    );
+  test
+    .stdout()
+    .command(["user", "--all", "PythonCoderAS"])
+    .it(
+      "runs user command with PythonCoderAS user and explicit all mode",
+      (ctx) => {
+        expect(ctx.stdout).to.contain(
+          "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1: Github API PR Test 1"
+        );
+        expect(ctx.stdout).to.contain(
+          "[Closed] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/2: Github API PR Test 2"
+        );
+      }
     );
 });

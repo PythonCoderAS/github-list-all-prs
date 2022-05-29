@@ -36,12 +36,12 @@ export default abstract class GithubListAllPRs extends Command {
     }),
     "repo-limit": Flags.integer({
       description: "Limit the number of PRs that can be shown by repository.",
-      default: 0
+      default: 0,
     }),
     "global-limit": Flags.integer({
       description: "Limit the number of PRs that can be shown globally.",
-      default: 0
-    })
+      default: 0,
+    }),
   };
 
   static args = [
@@ -80,42 +80,41 @@ export default abstract class GithubListAllPRs extends Command {
     open?: boolean;
     closed?: boolean;
     all?: boolean;
-  }): {open: boolean, closed: boolean} {
+  }): { open: boolean; closed: boolean } {
     let openExists = flags.open !== undefined;
     const closedExists = flags.closed !== undefined;
     const allExists = flags.all !== undefined;
-    if (
-      [openExists, closedExists, allExists].filter((x) => x).length > 1
-    ) {
-      this.error(
-        "You must only provide one of --open, --closed, or --all."
-      );
+    if ([openExists, closedExists, allExists].filter((x) => x).length > 1) {
+      this.error("You must only provide one of --open, --closed, or --all.");
     } else if (!openExists && !closedExists && !allExists) {
       openExists = true;
     }
 
-    if (allExists){
+    if (allExists) {
       return {
         open: true,
         closed: true,
       };
-    } else if (openExists) {
+    }
+
+ if (openExists) {
       return {
         open: true,
         closed: false,
       };
-    } else {
+    }
+ 
       return {
         open: false,
         closed: true,
       };
-    }
+    
   }
 
   async run(obj: typeof GithubListAllPRs = GithubListAllPRs): Promise<void> {
     const { args, flags } = await this.parse(obj);
     const token = this.getToken(flags);
-    const {open, closed} = this.getState(flags)
+    const { open, closed } = this.getState(flags);
     const client = new RepoClient({
       isUser: this.user,
       username: args.username,
@@ -128,13 +127,13 @@ export default abstract class GithubListAllPRs extends Command {
       author: flags.author,
       label: flags.label,
       perRepoLimit: flags["repo-limit"],
-      totalLimit: flags["global-limit"]
+      totalLimit: flags["global-limit"],
     });
     try {
       await client.main();
     } catch (error: any) {
       if (error !== undefined && error.name === "HttpError") {
-        this.error(error.message)
+        this.error(error.message);
       }
     }
   }

@@ -1,8 +1,9 @@
 import GithubListAllPRs from "../base";
-import {Flags} from "@oclif/core";
+import { Flags } from "@oclif/core";
 
 export default class GithubListAllUserPRs extends GithubListAllPRs {
-  static description = "List all PRs of all repositories under a personal user account.";
+  static description =
+    "List all PRs of all repositories under a personal user account.";
 
   user = true;
 
