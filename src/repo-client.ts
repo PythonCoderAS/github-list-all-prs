@@ -162,7 +162,7 @@ export class RepoClient {
 
   public printPR(repo: RepoData, pr: PRData): void {
     const consoleWidth: number = process.stdout.columns || 80;
-    let outputString = `[${capitalize(pr.state)}] https://github.com/${repo.owner}/${repo.name}/pull/${pr.number}: `;
+    let outputString = `[${capitalize(pr.state)}] https://github.com/${repo.owner.login}/${repo.name}/pull/${pr.number}: `;
     const remainingLength = consoleWidth - outputString.length;
     const titleToShow = pr.title.length > remainingLength ? `${pr.title.substring(0, remainingLength - 3)}...` : pr.title;
     outputString += titleToShow;
@@ -224,6 +224,9 @@ export class RepoClient {
         }
 
         throw error;
+      }
+      if (prs.length === 0){
+        continue;
       }
       this.printRepoHeading(repo, prs, globalCount);
       for (const pr of prs) {
