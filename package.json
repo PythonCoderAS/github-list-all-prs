@@ -1,6 +1,6 @@
 {
   "name": "github-list-all-prs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "List all PRs in all repositories belonging to an individual user/organization.",
   "author": "PythonCoderAS",
   "bin": {
