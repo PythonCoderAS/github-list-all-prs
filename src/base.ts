@@ -130,6 +130,12 @@ export default abstract class GithubListAllPRs extends Command {
       perRepoLimit: flags["repo-limit"],
       totalLimit: flags["global-limit"]
     });
-    await client.main();
+    try {
+      await client.main();
+    } catch (error: any) {
+      if (error !== undefined && error.name === "HttpError") {
+        return this.error(error.message)
+      }
+    }
   }
 }

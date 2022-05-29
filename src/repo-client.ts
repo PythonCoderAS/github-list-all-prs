@@ -171,28 +171,7 @@ export class RepoClient {
 
   async main(): Promise<void> {
     let repos: RepoData[];
-    try {
-      repos = await this.getRepos();
-    } catch (error: any) {
-      if (error !== undefined && error.name === "HttpError") {
-        switch (error.status) {
-          case 401:
-            return this.command.error(
-              "Invalid GITHUB_TOKEN, please check your environment variables."
-            );
-          case 404:
-            return this.command.error(
-              `Could not find ${this.isUser ? "user" : "organization"} ${
-                this.username
-              }.`
-            );
-          default:
-            throw error;
-        }
-      }
-
-      throw error;
-    }
+    repos = await this.getRepos();
 
     if (!this.privateRepos) {
       repos = repos.filter((repo) => !repo.private);
@@ -204,28 +183,8 @@ export class RepoClient {
     let globalCount = 0;
     for (const repo of repos) {
       let perRepoCount = 0;
-      let prs: PRData[] = [];
-      try {
-        prs = await this.getPRs(repo);
-      } catch (error: any) {
-        if (error !== undefined && error.name === "HttpError") {
-          switch (error.status) {
-            case 403:
-              return this.command.error(
-                `You do not have permission to list PRs in ${repo.owner.login}/${repo.name}.`
-              );
-            case 404:
-              return this.command.error(
-                `Could not find ${repo.owner.login}/${repo.name}. The repository may have been deleted.`
-              );
-            default:
-              throw error;
-          }
-        }
-
-        throw error;
-      }
-      if (prs.length === 0){
+      const prs: PRData[] = await this.getPRs(repo);
+      if (prs.length === 0) {
         continue;
       }
       this.printRepoHeading(repo, prs, globalCount);
