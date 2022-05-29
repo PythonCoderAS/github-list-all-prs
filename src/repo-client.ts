@@ -107,7 +107,7 @@ export class RepoClient {
       return "all";
     }
 
- if (this.open) {
+    if (this.open) {
       return "open";
     }
 
@@ -152,12 +152,20 @@ export class RepoClient {
     let heading = chalk.bold(`${repo.owner.login}/${repo.name}`);
     let displayablePRs = prs.length;
     if (this.perRepoLimit && displayablePRs > this.perRepoLimit) {
-        displayablePRs = this.perRepoLimit;
-      }
-    if (this.totalLimit && totalPRsDisplayed + displayablePRs > this.totalLimit) {
-        displayablePRs = this.totalLimit - totalPRsDisplayed;
-      }
-    heading += displayablePRs !== prs.length ? ` (${displayablePRs}/${prs.length})` : ` (${prs.length})`;
+      displayablePRs = this.perRepoLimit;
+    }
+
+    if (
+      this.totalLimit &&
+      totalPRsDisplayed + displayablePRs > this.totalLimit
+    ) {
+      displayablePRs = this.totalLimit - totalPRsDisplayed;
+    }
+
+    heading +=
+      displayablePRs === prs.length
+        ? ` (${prs.length})`
+        : ` (${displayablePRs}/${prs.length})`;
     console.log(chalk.underline(heading));
   }
 
@@ -181,18 +189,20 @@ export class RepoClient {
     if (!this.privateRepos) {
       repos = repos.filter((repo) => !repo.private);
     }
+
     console.log(
       `Listing PRs from ${repos.length} repositories. This may take a while.`
     );
-    const allPRs = await Promise.all(repos.map((repo) => this.getPRs(repo)))
+    const allPRs = await Promise.all(repos.map((repo) => this.getPRs(repo)));
     let globalCount = 0;
-    for (let i: number = 0; i < repos.length; i++) {
+    for (let i = 0; i < repos.length; i++) {
       let perRepoCount = 0;
       const repo: RepoData = repos[i];
       const prs: PRData[] = allPRs[i];
       if (prs.length === 0) {
         continue;
       }
+
       this.printRepoHeading(repo, prs, globalCount);
       for (const pr of prs) {
         this.printPR(repo, pr);
@@ -206,6 +216,7 @@ export class RepoClient {
           return;
         }
       }
+
       console.log("");
     }
   }

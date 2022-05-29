@@ -97,18 +97,17 @@ export default abstract class GithubListAllPRs extends Command {
       };
     }
 
- if (openExists) {
+    if (openExists) {
       return {
         open: true,
         closed: false,
       };
     }
- 
-      return {
-        open: false,
-        closed: true,
-      };
-    
+
+    return {
+      open: false,
+      closed: true,
+    };
   }
 
   async run(obj: typeof GithubListAllPRs = GithubListAllPRs): Promise<void> {
