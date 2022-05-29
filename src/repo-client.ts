@@ -207,7 +207,7 @@ export class RepoClient {
         }
 
         if (this.perRepoLimit && perRepoCount >= this.perRepoLimit) {
-          return;
+          break;
         }
       }
 
