@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "@pythoncoderas/oclif",
+    "@pythoncoderas/oclif-typescript",
+    "prettier"
+  ]
+}
