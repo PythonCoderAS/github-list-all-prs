@@ -45,7 +45,7 @@ The states can be specified as a command line flag. Only one state may be specif
 
 ### Author Filter
 
-The client can show PRs that have been authored by a specific user. Use the `--author=<usernaame>` option to specify the
+The client can show PRs that have been authored by a specific user. Use the `--author=<username>` option to specify the
 username of the PR author to filter by.
 
 ### Label Filter
