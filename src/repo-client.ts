@@ -170,16 +170,9 @@ export class RepoClient {
   }
 
   public printPR(repo: RepoData, pr: PRData): void {
-    const consoleWidth: number = process.stdout.columns || 80;
-    let outputString = `[${capitalize(pr.state)}] https://github.com/${
+    const outputString = `[${capitalize(pr.state)}] https://github.com/${
       repo.owner.login
-    }/${repo.name}/pull/${pr.number}: `;
-    const remainingLength = consoleWidth - outputString.length;
-    const titleToShow =
-      pr.title.length > remainingLength
-        ? `${pr.title.slice(0, Math.max(0, remainingLength - 3))}...`
-        : pr.title;
-    outputString += titleToShow;
+    }/${repo.name}/pull/${pr.number}: ${pr.title}`;
     return console.log(outputString);
   }
 
