@@ -195,6 +195,7 @@ export class RepoClient {
     );
     const allPRs = await Promise.all(repos.map((repo) => this.getPRs(repo)));
     let globalCount = 0;
+    // eslint-disable-next-line unicorn/no-for-loop -- Broken for TypeScript
     for (let i = 0; i < repos.length; i++) {
       let perRepoCount = 0;
       const repo: RepoData = repos[i];
