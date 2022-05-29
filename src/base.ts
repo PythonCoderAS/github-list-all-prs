@@ -19,6 +19,29 @@ export default abstract class GithubListAllPRs extends Command {
     "no-private": Flags.boolean({
       description: "Do not list PRs of private repositories.",
     }),
+    open: Flags.boolean({
+      description: "List open PRs (the default).",
+    }),
+    closed: Flags.boolean({
+      description: "List closed PRs.",
+    }),
+    all: Flags.boolean({
+      description: "List all PRs (open and closed).",
+    }),
+    author: Flags.string({
+      description: "List PRs by the given author.",
+    }),
+    label: Flags.string({
+      description: "List PRs with the given label.",
+    }),
+    "repo-limit": Flags.integer({
+      description: "Limit the number of PRs that can be shown by repository.",
+      default: 0
+    }),
+    "global-limit": Flags.integer({
+      description: "Limit the number of PRs that can be shown globally.",
+      default: 0
+    })
   };
 
   static args = [
@@ -35,7 +58,7 @@ export default abstract class GithubListAllPRs extends Command {
    * @return The token.
    * @protected
    */
-  protected getToken(flags: { token?: string }): string {
+  protected getToken(flags: { token?: string }): string | null {
     if (flags.token) {
       return flags.token;
     }
@@ -44,9 +67,7 @@ export default abstract class GithubListAllPRs extends Command {
       return process.env.GITHUB_TOKEN;
     }
 
-    this.error(
-      "You must provide a personal access token with the --token flag or set the GITHUB_TOKEN environment variable."
-    );
+    return null;
   }
 
   /**
@@ -103,7 +124,11 @@ export default abstract class GithubListAllPRs extends Command {
       command: this,
       private: !flags["no-private"],
       open,
-      closed
+      closed,
+      author: flags.author,
+      label: flags.label,
+      perRepoLimit: flags["repo-limit"],
+      totalLimit: flags["global-limit"]
     });
     await client.main();
   }

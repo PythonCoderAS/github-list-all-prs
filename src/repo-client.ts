@@ -8,7 +8,7 @@ import capitalize = require("lodash.capitalize");
  */
 export interface RepoClientConstructorOptions {
   username: string;
-  token: string;
+  token: string | null;
   isUser: boolean;
   /**
    * Direct pass-through since these flags are specific to user/organization mode
@@ -64,7 +64,7 @@ export class RepoClient {
   constructor(params: RepoClientConstructorOptions) {
     this.username = params.username;
     this.octokit = new Octokit({
-      auth: params.token,
+      auth: params.token ?? undefined,
       userAgent: "github-list-all-prs",
     });
     this.isUser = params.isUser;
