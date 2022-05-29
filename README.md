@@ -15,7 +15,8 @@ GITHUB_TOKEN="<your-github-token>" github-list-all-prs user <user>
 ### Tokens
 
 Tokens need to be GitHub private access tokens with the `repo` scopes. If you do not want to list PRs for any private
-repos, then the `public_repo` scope suffices. It is also possible to omit the token altogether.
+repos, then the `public_repo` scope suffices. It is also possible to omit the token altogether, but it is highly
+recommended to use a token because unauthenticated API requests have a very low ratelimit.
 
 Tokens can either be given via the `--token` argument or via the `GITHUB_TOKEN` environment variable. Alternatively,
 a `.env` file with `GITHUB_TOKEN=<token>` can also be created; see [dotenv](https://github.com/motdotla/dotenv) for more
