@@ -118,6 +118,7 @@ export class RepoClient {
       // eslint-disable-next-line camelcase -- Octokit API
       per_page: 100,
       state: this.getState(),
+      direction: "asc",
     });
 
     if (this.author) {

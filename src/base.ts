@@ -112,7 +112,7 @@ export default abstract class GithubListAllPRs extends Command {
     }
   }
 
-  async run(obj: typeof GithubListAllPRs = GithubListAllPRs) {
+  async run(obj: typeof GithubListAllPRs = GithubListAllPRs): Promise<void> {
     const { args, flags } = await this.parse(obj);
     const token = this.getToken(flags);
     const {open, closed} = this.getState(flags)
@@ -134,7 +134,7 @@ export default abstract class GithubListAllPRs extends Command {
       await client.main();
     } catch (error: any) {
       if (error !== undefined && error.name === "HttpError") {
-        return this.error(error.message)
+        this.error(error.message)
       }
     }
   }
