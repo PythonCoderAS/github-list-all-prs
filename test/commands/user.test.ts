@@ -7,7 +7,7 @@ describe("github-list-all-prs user", () => {
     .command(["user", "PythonCoderAS"])
     .it("runs user command with PythonCoderAS user", (ctx) =>
       expect(ctx.stdout).to.contain(
-        "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1: Github API PR Test 1"
+        "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1"
       )
     );
   test
@@ -17,7 +17,7 @@ describe("github-list-all-prs user", () => {
       "runs user command with PythonCoderAS user and explicit open mode",
       (ctx) =>
         expect(ctx.stdout).to.contain(
-          "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1: Github API PR Test 1"
+          "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1"
         )
     );
   test
@@ -27,7 +27,7 @@ describe("github-list-all-prs user", () => {
       "runs user command with PythonCoderAS user and explicit closed mode",
       (ctx) =>
         expect(ctx.stdout).to.contain(
-          "[Closed] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/2: Github API PR Test 2"
+          "[Closed] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/2"
         )
     );
   test
@@ -38,10 +38,10 @@ describe("github-list-all-prs user", () => {
       (ctx) => {
         console.error(ctx.stdout);
         expect(ctx.stdout).to.contain(
-          "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1: Github API PR Test 1"
+          "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1"
         );
         expect(ctx.stdout).to.contain(
-          "[Closed] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/2: Github API PR Test 2"
+          "[Closed] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/2"
         );
       }
     );
