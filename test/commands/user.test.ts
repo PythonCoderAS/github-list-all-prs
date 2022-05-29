@@ -36,6 +36,7 @@ describe("github-list-all-prs user", () => {
     .it(
       "runs user command with PythonCoderAS user and explicit all mode",
       (ctx) => {
+        console.error(ctx.stdout);
         expect(ctx.stdout).to.contain(
           "[Open] https://github.com/PythonCoderAS/GithubAPIIntegrationTest/pull/1: Github API PR Test 1"
         );
