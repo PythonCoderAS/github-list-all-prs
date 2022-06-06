@@ -84,7 +84,7 @@ export default abstract class GithubListAllPRs extends Command {
     let openExists = flags.open !== undefined;
     const closedExists = flags.closed !== undefined;
     const allExists = flags.all !== undefined;
-    if ([openExists, closedExists, allExists].filter((x) => x).length > 1) {
+    if ([openExists, closedExists, allExists].filter(Boolean).length > 1) {
       this.error("You must only provide one of --open, --closed, or --all.");
     } else if (!openExists && !closedExists && !allExists) {
       openExists = true;
