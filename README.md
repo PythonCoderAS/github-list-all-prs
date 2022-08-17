@@ -1,5 +1,9 @@
 # github-list-all-prs
 
+> ⚠️ **Deprecated** ⚠️
+> 
+> Superseded by [`gh-all-repos list-pr`](https://github.com/PythonCoderAS/gh-all-repos).
+
 List all PRs in all repositories belonging to an individual user/organization.
 
 ## Quickstart
